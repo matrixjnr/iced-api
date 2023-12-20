@@ -6,33 +6,33 @@ import org.hibernate.annotations.UpdateTimestamp
 
 @Entity
 @Table(name = "posts")
-class Post {
+data class Post (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long? = null,
 
-    var title: String? = null
-    var slug: String? = null
-    var status: String? = null
-    var type: String? = null
-    var category: String? = null
+    var title: String? = null,
+    var slug: String? = null,
+    var status: String? = null,
+    var type: String? = null,
+    var category: String? = null,
 
     @ElementCollection
-    var tags: List<String> = mutableListOf()
+    var tags: List<String> = mutableListOf(),
 
-    var summary: String? = null
-    var thumbnail: String? = null
-    var content: String? = null
+    var summary: String? = null,
+    var thumbnail: String? = null,
+    var content: String? = null,
 
     @ManyToOne
-    var author: User? = null
+    var author: User? = null,
 
     @OneToMany
-    var comments: List<Comment> = mutableListOf()
+    var comments: List<Comment> = mutableListOf(),
 
     @CreationTimestamp
-    var createdAt: String? = null
+    var createdAt: String? = null,
 
     @UpdateTimestamp
     var updatedAt: String? = null
-}
+)
