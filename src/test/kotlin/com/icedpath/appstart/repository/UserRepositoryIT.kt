@@ -46,6 +46,24 @@ class UserRepositoryIT @Autowired constructor(
         assertNull(foundUser)
     }
 
+    @Test
+    fun `it should update user`() {
+        val user = createUser()
+        entityManager.persist(user)
+        entityManager.flush()
+
+        val foundUser = user.email?.let { userRepository.findByEmail(it) }
+
+        foundUser?.name = "Jane Doe"
+        entityManager.persist(foundUser)
+        entityManager.flush()
+
+        val updatedUser = user.email?.let { userRepository.findByEmail(it) }
+
+        assertNotNull(updatedUser)
+        assertEquals(foundUser?.name, updatedUser?.name)
+    }
+
     fun createUser(): User {
         val user = User(
             name = "John Doe",
