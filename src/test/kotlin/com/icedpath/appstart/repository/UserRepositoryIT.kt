@@ -22,13 +22,8 @@ class UserRepositoryIT @Autowired constructor(
     }
 
     @Test
-    fun `it should find user by email`() {
-        val user = User(
-            name = "John Doe",
-            email = "john@test.com",
-            password = "password"
-        )
-
+    fun `it should save user`() {
+        val user = createUser()
         entityManager.persist(user)
         entityManager.flush()
 
@@ -36,5 +31,27 @@ class UserRepositoryIT @Autowired constructor(
 
         assertNotNull(foundUser)
         assertEquals(user.email, foundUser?.email)
+    }
+
+    @Test
+    fun `it should delete user`() {
+        val user = createUser()
+        entityManager.persist(user)
+        entityManager.flush()
+
+        userRepository.delete(user)
+
+        val foundUser = user.email?.let { userRepository.findByEmail(it) }
+
+        assertNull(foundUser)
+    }
+
+    fun createUser(): User {
+        val user = User(
+            name = "John Doe",
+            email = "john@test.com",
+            password = "password"
+        )
+        return user
     }
 }
