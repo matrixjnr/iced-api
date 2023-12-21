@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Slf4j
@@ -26,6 +27,7 @@ class UserService (
         }
     }
 
+    @Transactional
     fun save(userDto: UserDto): User {
         val user = User(
             name = userDto.name,
@@ -47,6 +49,7 @@ class UserService (
         }
     }
 
+    @Transactional
     fun update(user: User): User {
         logger.info("update: $user")
         val foundUser = userRepository.findById(user.id!!).orElse(null)
