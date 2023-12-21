@@ -2,6 +2,7 @@ package com.icedpath.appstart.repository
 
 import com.icedpath.appstart.model.User
 import jakarta.persistence.EntityManager
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,7 +31,7 @@ class UserRepositoryIT @Autowired constructor(
         val foundUser = user.email?.let { userRepository.findByEmail(it) }
 
         assertNotNull(foundUser)
-        assertEquals(user.email, foundUser?.email)
+        assertEquals(user.email, foundUser?.get()?.email)
     }
 
     @Test
@@ -41,9 +42,9 @@ class UserRepositoryIT @Autowired constructor(
 
         userRepository.delete(user)
 
-        val foundUser = user.email?.let { userRepository.findByEmail(it) }
+        val foundUser = userRepository.findByEmail(user.email!!)
 
-        assertNull(foundUser)
+        assertThat(foundUser).isEmpty()
     }
 
     @Test
@@ -52,16 +53,16 @@ class UserRepositoryIT @Autowired constructor(
         entityManager.persist(user)
         entityManager.flush()
 
-        val foundUser = user.email?.let { userRepository.findByEmail(it) }
+        val foundUser = userRepository.findByEmail(user.email!!)
 
-        foundUser?.name = "Jane Doe"
-        entityManager.persist(foundUser)
+        foundUser.get().name = "Jane Doe"
+        entityManager.persist(foundUser.get())
         entityManager.flush()
 
-        val updatedUser = user.email?.let { userRepository.findByEmail(it) }
+        val updatedUser = userRepository.findByEmail(user.email!!)
 
-        assertNotNull(updatedUser)
-        assertEquals(foundUser?.name, updatedUser?.name)
+        assertNotNull(updatedUser.get())
+        assertEquals(foundUser.get().name, updatedUser.get().name)
     }
 
     private fun createUser(): User {

@@ -1,5 +1,6 @@
 package com.icedpath.appstart.service
 
+import com.icedpath.appstart.controller.dto.UserDto
 import com.icedpath.appstart.exception.NotFoundException
 import com.icedpath.appstart.model.User
 import com.icedpath.appstart.repository.UserRepository
@@ -16,11 +17,22 @@ class UserService (
     private val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
     fun findByEmail(email: String): User? {
         logger.info("findByEmail: $email")
-        return userRepository.findByEmail(email)
+        val foundUser = userRepository.findByEmail(email).orElse(null)
+        if (foundUser != null) {
+            return foundUser
+        } else {
+            logger.error("User with email $email not found")
+            throw NotFoundException("User with email $email not found")
+        }
     }
 
-    fun save(user: User): User {
-        logger.info("save: $user")
+    fun save(userDto: UserDto): User {
+        val user = User(
+            name = userDto.name,
+            email = userDto.email,
+            password = userDto.password
+        )
+        logger.info("saved user: ${user.email}")
         return userRepository.save(user)
     }
 
@@ -40,8 +52,6 @@ class UserService (
         val foundUser = userRepository.findById(user.id!!).orElse(null)
         if (foundUser != null) {
             foundUser.name = user.name
-            foundUser.email = user.email
-            foundUser.password = user.password
             return userRepository.save(foundUser)
         } else {
             logger.error("User with id ${user.id} not found")

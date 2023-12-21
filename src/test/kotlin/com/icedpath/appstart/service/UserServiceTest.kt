@@ -1,5 +1,6 @@
 package com.icedpath.appstart.service
 
+import com.icedpath.appstart.controller.dto.UserDto
 import com.icedpath.appstart.model.User
 import com.icedpath.appstart.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -10,6 +11,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import org.slf4j.Logger
+import java.util.*
 
 @ExtendWith(value = [MockitoExtension::class])
 class UserServiceTest {
@@ -25,7 +27,7 @@ class UserServiceTest {
     @Test
     fun `it should find user by email`() {
         val email = "john@test.com"
-        `when`(userRepository.findByEmail(email)).thenReturn(User(email = email))
+        `when`(userRepository.findByEmail(email)).thenReturn(Optional.of(User(email = email)))
 
         val user = userService.findByEmail(email)
 
@@ -35,10 +37,19 @@ class UserServiceTest {
 
     @Test
     fun `it should save user`() {
-        val user = createUser()
+        val userDto = UserDto(
+            "John Doe",
+            "john@test.com",
+            "password"
+        )
+        val user = User(
+            name = userDto.name,
+            email = userDto.email,
+            password = userDto.password
+        )
         `when`(userRepository.save(user)).thenReturn(user)
 
-        val savedUser = userService.save(user)
+        val savedUser = userService.save(userDto)
 
         verify(userRepository).save(user)
         assertThat(savedUser).isEqualTo(user)
@@ -49,7 +60,7 @@ class UserServiceTest {
         val user = createUser()
         user.id = 1
         `when`(userRepository.findById(user.id!!))
-            .thenReturn(user.let { java.util.Optional.of(it) })
+            .thenReturn(Optional.of(user))
         doNothing().`when`(userRepository).delete(user)
         userService.delete(user.id!!)
 
