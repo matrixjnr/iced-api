@@ -64,7 +64,7 @@ class UserRepositoryIT @Autowired constructor(
         assertEquals(foundUser?.name, updatedUser?.name)
     }
 
-    fun createUser(): User {
+    private fun createUser(): User {
         val user = User(
             name = "John Doe",
             email = "john@test.com",

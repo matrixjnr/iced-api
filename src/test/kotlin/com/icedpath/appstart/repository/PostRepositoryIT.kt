@@ -118,7 +118,7 @@ class PostRepositoryIT @Autowired constructor(
         assertEquals(comment.id, foundPost?.get()?.comments?.get(0)?.id)
     }
 
-    fun createUser(): User {
+    private fun createUser(): User {
         val user = User(
             name = "John Doe",
             email = "john@test.com",
@@ -127,7 +127,7 @@ class PostRepositoryIT @Autowired constructor(
         return user
     }
 
-    fun createPost(user: User): Post {
+    private fun createPost(user: User): Post {
         val post = Post(
             title = "This is a post",
             content = "This is the content of the post",
@@ -136,7 +136,7 @@ class PostRepositoryIT @Autowired constructor(
         return post
     }
 
-    fun createComment(user: User): Comment {
+    private fun createComment(user: User): Comment {
         val comment = Comment(
             content = "This is a comment",
             author = user

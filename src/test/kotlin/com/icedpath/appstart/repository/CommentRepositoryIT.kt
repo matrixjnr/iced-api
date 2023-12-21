@@ -79,7 +79,7 @@ class CommentRepositoryIT @Autowired constructor(
         assertEquals("This is an updated comment", updatedComment?.get()?.content)
     }
 
-    fun createUser(): User {
+    private fun createUser(): User {
         val user = User(
             name = "John Doe",
             email = "john@test.com",
@@ -88,7 +88,7 @@ class CommentRepositoryIT @Autowired constructor(
         return user
     }
 
-    fun createComment(user: User): Comment {
+    private fun createComment(user: User): Comment {
         val comment = Comment(
             content = "This is a comment",
             postId = 1,
