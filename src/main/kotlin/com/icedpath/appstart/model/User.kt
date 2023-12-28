@@ -1,5 +1,6 @@
 package com.icedpath.appstart.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -20,7 +21,8 @@ data class User (
     @Column(unique = true)
     var email: String? = null,
 
-    var password: String? = null,
+    @JsonIgnore
+    private var password: String? = null,
 
     @CreationTimestamp
     var createdAt: String? = null,
@@ -35,8 +37,8 @@ data class User (
             .collect(Collectors.toList())
     }
 
-    override fun getPassword(): String {
-        return password!!
+    override fun getPassword(): String? {
+        return password
     }
 
     override fun getUsername(): String {
